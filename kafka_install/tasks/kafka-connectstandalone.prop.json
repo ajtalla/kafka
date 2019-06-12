@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Template configuration file to connect-standalone.properties",
+    "template": {
+      "src": "connect-standalone.properties.j2",
+      "dest": "{{ kafka_dir }}/config/connect-standalone.properties"
+    },
+    "tags": [
+      "kafka_config"
+    ]
+  }
+]

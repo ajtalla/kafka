@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Template configuration file to consumer.properties",
+    "template": {
+      "src": "consumer.properties.j2",
+      "dest": "{{ kafka_dir }}/config/consumer.properties"
+    },
+    "tags": [
+      "kafka_config"
+    ]
+  }
+]

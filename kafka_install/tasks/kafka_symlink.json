@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Creating symlink to kafka installation directory",
+    "file": {
+      "src": "{{ kafka_root_dir }}/kafka_2.12-{{ kafka_version }}",
+      "dest": "{{ kafka_dir }}",
+      "state": "link",
+      "group": "{{ kafka_group }}",
+      "owner": "{{ kafka_user }}"
+    },
+    "tags": [
+      "kafka_dirs"
+    ]
+  }
+]

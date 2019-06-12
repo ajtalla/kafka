@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Create kafka group zhsuinj",
+    "group": {
+      "name": "{{ kafka_group }}",
+      "state": "present"
+    },
+    "tags": [
+      "kafka_group"
+    ]
+  },
+  {
+    "name": "Create kafka user zhsuinj",
+    "user": {
+      "name": "{{ kafka_user }}",
+      "group": "{{ kafka_group }}",
+      "state": "present",
+      "createhome": false
+    },
+    "tags": [
+      "kafka_user"
+    ]
+  }
+]

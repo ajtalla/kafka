@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Template kafka systemd unit file",
+    "template": {
+      "src": "kafka.service.j2",
+      "dest": "/etc/systemd/system/kafka.service"
+    },
+    "notify": [
+      "Reload systemd",
+      "Restart kafka service"
+    ],
+    "tags": [
+      "kafka_service"
+    ]
+  }
+]

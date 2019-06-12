@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Template configuration file to producer.properties",
+    "template": {
+      "src": "producer.properties.j2",
+      "dest": "{{ kafka_dir }}/config/producer.properties"
+    },
+    "tags": [
+      "kafka_config"
+    ]
+  }
+]

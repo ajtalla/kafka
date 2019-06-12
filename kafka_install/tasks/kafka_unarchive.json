@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Unpack Apache Kafka",
+    "unarchive": {
+      "src": "/tmp/kafka_2.12-{{ kafka_version }}.tgz",
+      "dest": "{{ kafka_root_dir }}",
+      "copy": false,
+      "group": "{{ kafka_group }}",
+      "owner": "{{ kafka_user }}"
+    },
+    "when": "dir.stat.exists == False",
+    "tags": [
+      "kafka_unpack"
+    ]
+  }
+]

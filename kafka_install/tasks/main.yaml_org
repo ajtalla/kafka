@@ -1,0 +1,206 @@
+---
+- name: Create kafka group zhsuinj
+  group:
+    name: '{{ kafka_group }}'
+    state: present
+  tags:
+    - kafka_group
+
+- name: Create kafka user zhsuinj
+  user:
+    name: '{{ kafka_user }}'
+    group: '{{ kafka_group }}'
+    state: present
+    createhome: no
+  tags:
+    - kafka_user
+
+- name: Check if Kafka has already been downloaded and unpacked
+  stat:
+    path: '{{ kafka_dir }}'
+  register: dir
+
+- name: Download Apache Kafka
+  get_url:
+    url: https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
+    dest: /tmp
+  when: dir.stat.exists == False
+  tags:
+    - kafka_download
+
+- name: Creating required directories
+  file:
+    path: '{{ kafka_root_dir }}'
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+
+- name: Unpack Apache Kafka
+  unarchive:
+    src: /tmp/kafka_2.12-{{ kafka_version }}.tgz
+    dest: '{{ kafka_root_dir }}'
+    copy: no
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  when: dir.stat.exists == False
+  tags:
+    - kafka_unpack
+
+- name: Create symlink to kafka installation directory
+  file:
+    src: '{{ kafka_root_dir }}/kafka_2.12-{{ kafka_version }}'
+    dest: '{{ kafka_dir }}'
+    state: link
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  tags:
+    - kafka_dirs
+
+- name: Create directory for kafka log files
+  file:
+    path: '{{ kafka_log_dirs }}'
+    state: directory
+    group: '{{ kafka_group }}'
+    owner: '{{ kafka_user }}'
+  tags:
+    - kafka_dirs
+
+#- name: Create directory for symlink to kafka configuration files
+#  file:
+#    path: /etc/kafka
+#    state: directory
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_dirs
+
+- name: Template configuration file to server.properties
+  template:
+    src: server.properties.j2
+    dest: '{{ kafka_dir }}/config/server.properties'
+  notify:
+    - Restart kafka service
+  tags:
+    - kafka_config
+
+#- name: Template configuration file to zookeeper.properties
+#  template:
+#    src: zookeeper.properties.j2
+#    dest: '{{ kafka_dir }}/config/zookeeper.properties'
+#  tags:
+#    - kafka_config
+
+- name: Template configuration file to connect-standalone.properties
+  template:
+    src: connect-standalone.properties.j2
+    dest: '{{ kafka_dir }}/config/connect-standalone.properties'
+  tags:
+    - kafka_config
+
+- name: Template configuration file to connect-distributed.properties
+  template:
+    src: connect-distributed.properties.j2
+    dest: '{{ kafka_dir }}/config/connect-distributed.properties'
+  tags:
+    - kafka_config
+
+- name: Template configuration file to producer.properties
+  template:
+    src: producer.properties.j2
+    dest: '{{ kafka_dir }}/config/producer.properties'
+  tags:
+    - kafka_config
+
+- name: Template configuration file to consumer.properties
+  template:
+    src: consumer.properties.j2
+    dest: '{{ kafka_dir }}/config/consumer.properties'
+  tags:
+    - kafka_config
+
+#- name: Create symlink to kafka server properties file
+#  file:
+#    src: '{{ kafka_dir }}/config/server.properties'
+#    dest: /etc/kafka/server.properties
+#    state: link
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_config
+
+#- name: Create symlink to kafka connect standalone properties file
+#  file:
+#    src: '{{ kafka_dir }}/config/connect-standalone.properties'
+#    dest: /etc/kafka/connect-standalone.properties
+#    state: link
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_config
+
+#- name: Create symlink to kafka connect distributed properties file
+#  file:
+#    src: '{{ kafka_dir }}/config/connect-distributed.properties'
+#    dest: /etc/kafka/connect-distributed.properties
+#    state: link
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_config
+
+#- name: Create symlink to kafka producer properties file
+#  file:
+#    src: '{{ kafka_dir }}/config/producer.properties'
+#    dest: /etc/kafka/producer.properties
+#    state: link
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_config
+
+#- name: Create symlink to kafka consumer properties file
+#  file:
+#    src: '{{ kafka_dir}}/config/consumer.properties'
+#    dest: /etc/kafka/consumer.properties
+#    state: link
+#    group: '{{ kafka_group }}'
+#    owner: '{{ kafka_user }}'
+#  tags:
+#    - kafka_config
+
+#- name: Template Kafka init.d service file
+#  template:
+#    src: kafka.initd.j2
+#    dest: /etc/init.d/kafka
+#    mode: 0755
+#  notify:
+#    - Reload initd
+#    - Restart kafka service
+#  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '6'
+#  tags:
+#    - kafka_service
+
+- name: Template kafka systemd service file to /usr/lib/systemd/system/kafka.service
+  template:
+    src: kafka.service.j2
+    dest: /etc/systemd/system/kafka.service
+  notify:
+    - Reload systemd
+    - Restart kafka service
+  tags:
+    - kafka_service
+
+- name: Install and start the kafka service
+  service:
+    name: kafka
+    state: restarted
+    enabled: yes
+  tags:
+    - kafka_service
+
+- name: Delete the kafka archive file
+  file:
+    path: /tmp/kafka_{{ kafka_version }}.tgz
+    state: absent
+  tags:
+    - kafka_cleanup

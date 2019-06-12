@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Delete the kafka archive file",
+    "file": {
+      "path": "/tmp/kafka_{{ kafka_version }}.tgz",
+      "state": "absent"
+    },
+    "tags": [
+      "kafka_cleanup"
+    ]
+  }
+]

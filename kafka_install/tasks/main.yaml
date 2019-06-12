@@ -1,0 +1,44 @@
+[
+  {
+    "include": "kafka_group_user.json"
+  },
+  {
+    "include": "kafka_pkg_download.json"
+  },
+  {
+    "include": "kafka_dirs.json"
+  },
+  {
+    "include": "kafka_unarchive.json"
+  },
+  {
+    "include": "kafka_symlink.json"
+  },
+  {
+    "include": "kafka_logdir.json"
+  },
+  {
+    "include": "kafka_server.prop.json"
+  },
+  {
+    "include": "kafka-connectstandalone.prop.json"
+  },
+  {
+    "include": "kafka_connectdist.pro.json"
+  },
+  {
+    "include": "kafka_producer.prop.json"
+  },
+  {
+    "include": "kafka_consumer.prop.json"
+  },
+  {
+    "include": "kafka_systemd.json"
+  },
+  {
+    "include": "kafka_start.json"
+  },
+  {
+    "include": "kafka_deletetar.json"
+  }
+]
