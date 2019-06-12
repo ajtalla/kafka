@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Template configuration file to connect-distributed.properties",
+    "template": {
+      "src": "connect-distributed.properties.j2",
+      "dest": "{{ kafka_dir }}/config/connect-distributed.properties"
+    },
+    "tags": [
+      "kafka_config"
+    ]
+  }
+]

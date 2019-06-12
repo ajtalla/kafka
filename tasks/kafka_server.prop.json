@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Template configuration file to server.properties",
+    "template": {
+      "src": "server.properties.j2",
+      "dest": "{{ kafka_dir }}/config/server.properties"
+    },
+    "notify": [
+      "Restart kafka service"
+    ],
+    "tags": [
+      "kafka_config"
+    ]
+  }
+]
