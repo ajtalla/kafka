@@ -8,7 +8,7 @@
       "group": "{{ kafka_group }}",
       "owner": "{{ kafka_user }}"
     },
-    "when": "dir.stat.exists == False",
+    "when": "dir.stat.exists",
     "tags": [
       "kafka_unpack"
     ]

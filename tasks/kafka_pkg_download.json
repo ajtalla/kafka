@@ -12,7 +12,7 @@
       "url": "https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz",
       "dest": "/tmp"
     },
-    "when": "dir.stat.exists == False",
+    "when": "dir.stat.exists",
     "tags": [
       "kafka_download"
     ]

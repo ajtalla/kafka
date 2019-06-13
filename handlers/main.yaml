@@ -1,10 +1,11 @@
 ---
 
-- name: Reload initd
-  command: initctl reload-configuration
+#- name: Reload initd
+#  command: initctl reload-configuration
 
 - name: Reload systemd
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
 
 - name: Restart kafka service
   service:
